@@ -1,14 +1,20 @@
 import os
+import sys
 import math
 import numpy as np
-
-train = True
 
 def calc_norm(x0,x1,y0,y1,z0,z1):
     ret = math.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
     return ret
 
 def main():
+    if len(sys.argv) == 1 or sys.argv[1] == "Test":
+        train = False
+    elif sys.argv[1] == "Train":
+        train = True
+    else:
+        print("Invalid argument")
+        return
     if(train):
         dir = "data/dataset/train"
         outfile = open("data/rad_d1","w")
@@ -74,7 +80,8 @@ def main():
                     anglesl = [angle_0,angle_1,angle_2,angle_3,angle_4]
                     for idx in range(len(anglesl)):
                         if not math.isnan(anglesl[idx]):
-                            angles[idx].append(anglesl[idx])  
+                            angles[idx].append(anglesl[idx]) 
+
                 dists_2_bdy_cent = []
                 joint_coords = []
 
