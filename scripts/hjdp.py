@@ -46,7 +46,8 @@ def main():
                 frame_cnt+=1
                 
                 if(joint_coords):
-                    for idx in range(len(dists_2_bdy_cent)): 
+                    for idx in range(len(dists_2_bdy_cent)):
+                        dists_2_bdy_cent[idx] = [x for x in dists_2_bdy_cent[idx] if np.isnan(x) == False]
                         dists[idx].append(dists_2_bdy_cent[idx])
                 
                 dists_2_bdy_cent = []
@@ -57,26 +58,22 @@ def main():
             dy = abs(row[3] - hip_center[1])
             dz = abs(row[4] - hip_center[2])
             dists_2_bdy_cent.append([dx, dy, dz])
-            # dists_2_bdy_cent.append(calc_norm(hip_center[0], row[2],
-            #                                   hip_center[1], row[3], 
-            #                                   hip_center[2], row[4]))
-        print(dists)
-        # compute histogram for each of 20 distance catagories normal to number of frames in given file
-        # for dist in dists:
-        #     hist  = np.histogram(dist, bins_N)
-        #     counts = hist[0].tolist()
-        #     for idx in range(len(counts)): # Normalize 
-        #         counts[idx] = counts[idx] / frame_cnt 
-        #     feature_vector.extend(counts)
+
+        for joints in dists:
+            dimensions = list(map(list, zip(*joints)))
+            for dimension in dimensions:
+                hist  = np.histogram(dimension, bins_N)
+                counts = hist[0].tolist()
+                for idx in range(len(counts)): # Normalize 
+                    counts[idx] = counts[idx] / frame_cnt
+                feature_vector.extend(counts) 
         
-        # for item in feature_vector:
-        #     outfile.write(str(item) + ", ")
-        # outfile.write("\n")
-        # feature_vector = []
+        for item in feature_vector:
+            outfile.write(str(item) + ", ")
+        outfile.write("\n")
+        feature_vector = []
 
     outfile.close()
 
 if __name__ == '__main__':
     main()
-
-
