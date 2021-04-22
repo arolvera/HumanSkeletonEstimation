@@ -3,10 +3,6 @@ import sys
 import math
 import numpy as np
 
-def calc_norm(x0,x1,y0,y1,z0,z1):
-    ret = math.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
-    return ret
-
 def main():
     if len(sys.argv) == 1 or sys.argv[1] == "Test":
         train = False
@@ -38,7 +34,6 @@ def main():
         for line in f:
             stripped = line.strip().split()
             row = list(map(float, stripped))
-            frame_id_prev = frame_id
             frame_id = row[0]
             joint_id = row[1]
             if(joint_id == 1): # new frame
