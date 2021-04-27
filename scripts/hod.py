@@ -7,8 +7,10 @@ import numpy as np
 def main():
     if len(sys.argv) == 1 or sys.argv[1] == "Test":
         train = False
+        label_mod = 8
     elif sys.argv[1] == "Train":
         train = True
+        label_mod = 12
     else:
         print("Invalid argument")
         return
@@ -31,6 +33,8 @@ def main():
     #feature_vector = []
     hist = [[],[],[]]
     hists = []
+    index = 1
+    file_cnt = 0
     for plane in range(len(hist)):
         for i in range(bins_N):
             hist[plane].append(0)
@@ -139,9 +143,13 @@ def main():
                 for value in range(len(hists[joint_idx][plane_idx])):
                     feature_vector.append(hists[joint_idx][plane_idx][value] / frame_cnt)
         
+        outfile.write(str(file_cnt//label_mod) + " ")
         for item in feature_vector:
-            outfile.write(str(item) + ", ")
+            outfile.write(str(index) + ":" + str(item) + " ")
+            index+=1
         outfile.write("\n")
+        index = 1
+        file_cnt+=1
         
         feature_vector = []
         hist = [[],[],[]]

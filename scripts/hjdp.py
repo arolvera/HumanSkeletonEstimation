@@ -6,8 +6,10 @@ import numpy as np
 def main():
     if len(sys.argv) == 1 or sys.argv[1] == "Test":
         train = False
+        label_mod = 8
     elif sys.argv[1] == "Train":
         train = True
+        label_mod = 12
     else:
         print("Invalid argument")
         return
@@ -22,6 +24,8 @@ def main():
     joint_id = None
     bins_N = 10
     bins_M = 10
+    index = 1
+    file_cnt = 0
     dists_2_bdy_cent = []
     joint_coords = []
     feature_vector = []
@@ -63,9 +67,13 @@ def main():
                     counts[idx] = counts[idx] / frame_cnt
                 feature_vector.extend(counts) 
         
+        outfile.write(str(file_cnt//label_mod) + " ")
         for item in feature_vector:
-            outfile.write(str(item) + ", ")
+            outfile.write(str(index) + ":" + str(item) + " ")
+            index += 1
         outfile.write("\n")
+        index = 1
+        file_cnt+=1
         feature_vector = []
 
     outfile.close()
