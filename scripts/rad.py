@@ -19,10 +19,10 @@ def main():
         return
     if(train):
         dir = "data/dataset/train"
-        outfile = open("data/rad_d1","w")
+        outfile = open("data/rad_d2","w")
     else:
         dir = "data/dataset/test"
-        outfile = open("data/rad_d1.t","w")
+        outfile = open("data/rad_d2.t","w")
     directory = os.listdir(dir)
     frame_id = None
     joint_id = None
