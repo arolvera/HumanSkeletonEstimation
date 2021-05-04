@@ -7,16 +7,7 @@ def calc_norm(x0,x1,y0,y1,z0,z1):
     ret = math.sqrt((x1-x0)**2 + (y1-y0)**2 + (z1-z0)**2)
     return ret
 
-def main():
-    if len(sys.argv) == 1 or sys.argv[1] == "Test":
-        train = False
-        label_mod = 8
-    elif sys.argv[1] == "Train":
-        train = True
-        label_mod = 12
-    else:
-        print("Invalid argument")
-        return
+def main(train, bins):
     if(train):
         dir = "data/dataset/train"
         outfile = open("data/rad_d2","w")
@@ -26,14 +17,28 @@ def main():
     directory = os.listdir(dir)
     frame_id = None
     joint_id = None
-    bins_N = 10
-    bins_M = 10
+    bins_N = bins
+    bins_M = bins
     index = 1
-    file_cnt = 0
     dists_2_bdy_cent = []
     joint_coords = []
     feature_vector = []
     for file in directory:
+        act = file[1:3]
+        if act == "08":
+            act = "1"
+        elif act == "10":
+            act = "2"
+        elif act == "12":
+            act = "3"
+        elif act == "13":
+            act = "4"
+        elif act == "15":
+            act = "5"
+        elif act == "16":
+            act = "6"
+        else:
+            return 'Error unexpected label'
         f = open(dir + "/" + str(file), "r")
         frame_cnt = 0
         dists = [[],[],[],[],[]]
@@ -110,17 +115,20 @@ def main():
             for idx in range(len(counts)): # Normalize 
                 counts[idx] = counts[idx] / frame_cnt 
             feature_vector.extend(counts)
-
-        outfile.write(str(file_cnt//label_mod) + " ")
-        for item in feature_vector:
+        #print(max(feature_vector), min(feature_vector))
+        minimum = min(feature_vector)
+        maximum = max(feature_vector)
+        vec = [(i - minimum)/(maximum - minimum) for i in feature_vector]
+        outfile.write(act + " ")
+        for item in vec:
             outfile.write(str(index) + ":" + str(item) + " ")
             index+=1
         outfile.write("\n")
         index = 1
-        file_cnt+=1
         feature_vector = []
+        vec = []
 
     outfile.close()
 
 if __name__ == '__main__':
-    main()
+    main(train, bins)

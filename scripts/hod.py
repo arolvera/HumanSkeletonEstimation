@@ -4,16 +4,16 @@ import math
 import itertools
 import numpy as np
 
-def main():
-    if len(sys.argv) == 1 or sys.argv[1] == "Test":
-        train = False
-        label_mod = 8
-    elif sys.argv[1] == "Train":
-        train = True
-        label_mod = 12
-    else:
-        print("Invalid argument")
-        return
+def main(train, bins):
+    # if len(sys.argv) == 1 or sys.argv[1] == "Test":
+    #     train = False
+    #     label_mod = 8
+    # elif sys.argv[1] == "Train":
+    #     train = True
+    #     label_mod = 12
+    # else:
+    #     print("Invalid argument")
+    #     return
     if(train):
         dir = "data/dataset/train"
         outfile = open("data/hod_d2","w")
@@ -28,7 +28,7 @@ def main():
     deltas = [[],[],[]] # dx, dy and dz for each of 20 joints
     l = [[],[],[]]
     theta = [[],[],[]]
-    bins_N = 10
+    bins_N = bins
     bin = None
     #feature_vector = []
     hist = [[],[],[]]
@@ -46,6 +46,21 @@ def main():
             l_accum[plane_idx].append(0)
 
     for file in directory:
+        act = file[1:3]
+        if act == "08":
+            act = "1"
+        elif act == "10":
+            act = "2"
+        elif act == "12":
+            act = "3"
+        elif act == "13":
+            act = "4"
+        elif act == "15":
+            act = "5"
+        elif act == "16":
+            act = "6"
+        else:
+            return "Error unexpected label"
         f = open(dir + "/" + str(file), "r")
         frame_cnt = 0
         for line in f: # frame loop
@@ -143,13 +158,13 @@ def main():
                 for value in range(len(hists[joint_idx][plane_idx])):
                     feature_vector.append(hists[joint_idx][plane_idx][value] / frame_cnt)
         
-        outfile.write(str(file_cnt//label_mod) + " ")
+        outfile.write(act + " ")
         for item in feature_vector:
             outfile.write(str(index) + ":" + str(item) + " ")
             index+=1
         outfile.write("\n")
         index = 1
-        file_cnt+=1
+        
         
         feature_vector = []
         hist = [[],[],[]]
@@ -168,4 +183,4 @@ def main():
     outfile.close()
 
 if __name__ == '__main__':
-    main()
+    main(train, bins)
