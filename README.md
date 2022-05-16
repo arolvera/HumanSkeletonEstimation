@@ -1,4 +1,4 @@
-# CSCI573_project3
+# Human Skeleton Estimation
 
 ## Running scripts
 This repositiory contains the following three implementations of skeleton based representations
